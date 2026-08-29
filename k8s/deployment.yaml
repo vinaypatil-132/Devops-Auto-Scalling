@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: shopsphere
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: shopsphere
+
+  template:
+    metadata:
+      labels:
+        app: shopsphere
+
+    spec:
+      containers:
+        - name: shopsphere
+          image: shopsphere:1.0
+          imagePullPolicy: Never
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          ports:
+            - containerPort: 3000
+
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shopsphere-db
+                  key: DATABASE_URL
+
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: shopsphere-config
+                  key: APP_ENV
+                  

@@ -16,7 +16,7 @@ export async function GET() {
         timestamp,
         service: 'ShopSphere API',
         database: isDbConnected ? 'connected' : 'disconnected',
-        environment: process.env.NODE_ENV || 'development',
+        environment: process.env.APP_ENV || 'development',
       },
       { status: isDbConnected ? 200 : 503 }
     );
