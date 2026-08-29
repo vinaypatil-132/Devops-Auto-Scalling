@@ -1,75 +1,103 @@
 # ShopSphere — Auto-Scaling E-Commerce Platform
 
-A modern containerized e-commerce platform built to demonstrate practical **DevOps, Docker, and Kubernetes** concepts.
+A modern full-stack e-commerce application built to demonstrate practical **DevOps and Kubernetes concepts**.
 
-The application is intentionally kept simple so the focus is on understanding and demonstrating the infrastructure, deployment, networking, and auto-scaling aspects of a real-world application.
+## 🛠️ Tech Stack
 
----
+- **Next.js + TypeScript** — Application
+- **Tailwind CSS** — UI
+- **PostgreSQL** — Database
+- **Docker** — Containerization
+- **Kubernetes + Minikube** — Container orchestration
+- **NGINX Ingress** — HTTP routing
+- **HPA** — Horizontal Pod Autoscaling
 
-## 🚀 Project Overview
+## 🚀 What This Project Demonstrates
 
-ShopSphere is a full-stack e-commerce application built with Next.js and PostgreSQL and deployed on a local Kubernetes cluster using Minikube.
+- Dockerized Next.js application
+- Kubernetes Deployment and Pods
+- Multiple replicas and self-healing
+- Kubernetes Service
+- Horizontal Pod Autoscaling (**2–6 Pods, 50% CPU target**)
+- ConfigMaps and Secrets
+- NGINX Ingress
+- PostgreSQL connectivity
+- Health checks and production builds
 
-The project demonstrates how a web application can be:
+### Auto-Scaling Demo
 
-- Containerized with Docker
-- Deployed and managed with Kubernetes
-- Scaled horizontally based on CPU utilization
-- Exposed through a Kubernetes Service
-- Routed through an NGINX Ingress
-- Configured using Kubernetes ConfigMaps
-- Connected to PostgreSQL securely using Kubernetes Secrets
-- Automatically recovered when Pods fail
+Under load, ShopSphere was tested scaling:
 
-The application uses a PostgreSQL database hosted on a Samsung S25 through Termux for the development environment.
+`3 Pods → 6 Pods`
 
----
+After the load was removed:
+
+`6 Pods → 2 Pods`
+
+This demonstrates both automatic scale-up and scale-down.
 
 ## 🏗️ Architecture
 
 ```text
-                         User / Browser
-                              |
-                              v
-                    NGINX Ingress Controller
-                              |
-                              v
-                    Kubernetes Service
-                              |
-              +---------------+---------------+
-              |               |               |
-              v               v               v
-         ShopSphere       ShopSphere      ShopSphere
-            Pod              Pod              Pod
-              \               |               /
-               \              |              /
-                +-------------+-------------+
-                              |
-                              v
-                    Samsung S25 PostgreSQL
+User
+ ↓
+NGINX Ingress
+ ↓
+Kubernetes Service
+ ↓
+ShopSphere Pods
+ ↓
+PostgreSQL (S25 / Termux)
 ```
-## Auto-Scaling Architecture
+
+HPA monitors CPU metrics and adjusts the number of ShopSphere Pods according to demand.
+
+## 📁 Project Structure
 
 ```text
-                    Incoming Traffic
-                           |
-                           v
-                    Kubernetes Service
-                           |
-                           v
-                  ShopSphere Deployment
-                           |
-              +------------+------------+
-              |            |            |
-            Pod 1        Pod 2        Pod 3
-                           |
-                           v
-                    Metrics Server
-                           |
-                           v
-                         HPA
-                           |
-              +------------+------------+
-              |                         |
-         Scale Up                    Scale Down
-        3 → 4 → 5 → 6              6 → 5 → 2
+Devops-Auto-Scalling/
+├── app/
+├── components/
+├── lib/
+├── k8s/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── hpa.yaml
+│   ├── configmap.yaml
+│   └── ingress.yaml
+├── Dockerfile
+└── README.md
+```
+
+## ▶️ Run Locally
+
+```bash
+npm install
+npm run db:setup
+npm run db:seed
+npm run dev
+```
+
+## ☸️ Run with Kubernetes
+
+```bash
+minikube start
+minikube image load shopsphere:1.0
+kubectl apply -f k8s/
+```
+
+Check the deployment:
+
+```bash
+kubectl get pods
+kubectl get deployment
+kubectl get service
+kubectl get hpa
+kubectl get ingress
+```
+
+## 🎯 Project Goal
+
+The goal of ShopSphere is to demonstrate how a modern web application can be **containerized, deployed, exposed, securely configured, and automatically scaled using Kubernetes**.
+
+> **Note:** This is a learning/demo project. Payment functionality is test-only and no real payment processing is implemented.
