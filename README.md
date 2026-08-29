@@ -47,3 +47,29 @@ The application uses a PostgreSQL database hosted on a Samsung S25 through Termu
                               |
                               v
                     Samsung S25 PostgreSQL
+```
+## Auto-Scaling Architecture
+
+```text
+                    Incoming Traffic
+                           |
+                           v
+                    Kubernetes Service
+                           |
+                           v
+                  ShopSphere Deployment
+                           |
+              +------------+------------+
+              |            |            |
+            Pod 1        Pod 2        Pod 3
+                           |
+                           v
+                    Metrics Server
+                           |
+                           v
+                         HPA
+                           |
+              +------------+------------+
+              |                         |
+         Scale Up                    Scale Down
+        3 → 4 → 5 → 6              6 → 5 → 2
