@@ -39,15 +39,25 @@ This demonstrates both automatic scale-up and scale-down.
 ## 🏗️ Architecture
 
 ```text
-User
- ↓
-NGINX Ingress
- ↓
-Kubernetes Service
- ↓
-ShopSphere Pods
- ↓
-PostgreSQL (S25 / Termux)
+                        User / Browser
+                              |
+                              v
+                    NGINX Ingress Controller
+                              |
+                              v
+                    Kubernetes Service
+                              |
+              +---------------+---------------+
+              |               |               |
+              v               v               v
+         ShopSphere       ShopSphere      ShopSphere
+            Pod              Pod              Pod
+              \               |               /
+               \              |              /
+                +-------------+-------------+
+                              |
+                              v
+                    Samsung S25 PostgreSQL
 ```
 
 HPA monitors CPU metrics and adjusts the number of ShopSphere Pods according to demand.
