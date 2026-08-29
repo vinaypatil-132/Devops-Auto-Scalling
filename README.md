@@ -62,6 +62,32 @@ This demonstrates both automatic scale-up and scale-down.
 
 HPA monitors CPU metrics and adjusts the number of ShopSphere Pods according to demand.
 
+## Auto-Scaling Architecture
+
+```text             
+                    Incoming Traffic
+                           |
+                           v
+                    Kubernetes Service
+                           |
+                           v
+                  ShopSphere Deployment
+                           |
+              +------------+------------+
+              |            |            |
+            Pod 1        Pod 2        Pod 3
+                           |
+                           v
+                    Metrics Server
+                           |
+                           v
+                         HPA
+                           |
+              +------------+------------+
+              |                         |
+         Scale Up                    Scale Down
+        3 → 4 → 5 → 6              6 → 5 → 2
+```
 ## 📁 Project Structure
 
 ```text
